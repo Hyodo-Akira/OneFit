@@ -59,7 +59,7 @@ services:
   phpMyAdmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_PARBIRARY=1
+      - PMA_ARBITRARY=1
       - PMA_HOST=db
       - PMA_USER=root
       - PMA_PASSWORD=root
