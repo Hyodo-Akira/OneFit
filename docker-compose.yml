@@ -44,7 +44,6 @@ services:
 
   db:
     container_name: curriculum-db
-    platform: linux/x86_64
     image: mysql:5.7
     # コンテナの環境変数を指定
     environment:
@@ -59,7 +58,7 @@ services:
   phpMyAdmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_ARBITRARY=1
+      - PMA_PARBIRARY=1
       - PMA_HOST=db
       - PMA_USER=root
       - PMA_PASSWORD=root

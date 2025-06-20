@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\OnefitController;
-use App\Http\Controllers\LoginController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,11 +11,6 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Auth::routes();
-
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-//Route::get('/',[OnefitController::class,'index']);
-Route::get('/',[LoginController::class,'index']);
+Route::get('/', function () {
+    return view('welcome');
+});
