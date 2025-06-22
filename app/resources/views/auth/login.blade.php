@@ -30,5 +30,6 @@
 
         <button type="submit">ログイン</button>
     </form>
+    <a href="{{ route('register') }}">新規会員登録</a>
 </body>
 </html>

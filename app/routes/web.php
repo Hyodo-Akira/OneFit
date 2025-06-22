@@ -3,6 +3,8 @@
 //Auth(認証機能（新規登録やログイン、ログアウトをまとめたもの）)Controllerを使う宣言　※名前は自由に決められるもの
 use App\Http\Controllers\AuthController;
 
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,3 +32,10 @@ Route::post('/login',[AuthController::class,'login']);
 
 //ログアウトしたいときのルート、ボタンを押したときlogout関数を使う→このルートをlogoutで使える
 Route::Post('/logout',[AuthController::class,'logout'])->name('logout');
+
+//編集したいユーザーの編集ページに移動、UsersControllerのeditクラスを使う→users.editで使える
+Route::get('users/{id}/edit',[UserController::class,'edit'])->name('users.edit');
+//データを上書きするときに使うルート（どのユーザーのデータを更新するか）、UserControllerのupdateクラスを使う→users.updateで使える
+Route::put('/users/{id}',[UserController::class,'update'])->name('users.update');
+//データを削除するときに使うルート（どのユーザーのデータを削除するか）、UserControllerのdestroyクラスを使う→users.destroyで使える
+Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');

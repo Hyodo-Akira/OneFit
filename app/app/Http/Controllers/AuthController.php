@@ -69,4 +69,16 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
+    //ログアウト機能関数
+    public function logout(Request $request)
+    {
+        //ログアウト処理
+        Auth::logout();
+
+        $request->session()->invalidate(); //現在のログイン情報（セッション）を無効化　※セッション＝本人証明のようなもの
+        $request->session()->regenerateToken(); //次の安全なフォーム送信用トークンを作成　※トークン＝フォーム送信のときに使用する合言葉
+
+        return redirect('/login'); //ログイン画面へリダイレクト
+    }
+
 }
