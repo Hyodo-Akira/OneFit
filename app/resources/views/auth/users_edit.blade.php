@@ -17,6 +17,11 @@
 
                 <button type="submit">更新</button>
             </form>
+            <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">アカウント削除</button>
+            </form>
         </div>
     </div>
 @endsection

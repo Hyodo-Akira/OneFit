@@ -30,7 +30,17 @@ class UserController extends Controller
             'email' => $request->email,
         ]);
         
-        //ここにリダイレクト、完了メッセージ
-        return redirect('/home');
+        // /homeにリダイレクト、完了メッセージ
+        return redirect('/home')->with('success','アカウント情報を変更しました');
+    }
+
+    //ログインしているユーザーのアカウントを削除する関数
+    public function destroy()
+    {
+        $user = Auth::user();
+        $user->delete();
+
+        // /loginにリダイレクト、完了メッセージ
+        return redirect('/login')->with('success','アカウントを削除しました');
     }
 }

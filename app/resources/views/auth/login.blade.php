@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>ログイン</title>
-</head>
-<body>
+@extends('layouts.layout')
+@section('content')
     <h1>ログイン</h1>
 
     <!-- エラーメッセージ表示 -->
@@ -31,5 +26,4 @@
         <button type="submit">ログイン</button>
     </form>
     <a href="{{ route('register') }}">新規会員登録</a>
-</body>
-</html>
+@endsection
