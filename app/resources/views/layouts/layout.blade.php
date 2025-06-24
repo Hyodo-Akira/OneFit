@@ -32,6 +32,10 @@
                     OneFit
                 </a>
             </div>
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-link">ログアウト</button>
+            </form>
         </nav>
         @yield('content')
     </div>

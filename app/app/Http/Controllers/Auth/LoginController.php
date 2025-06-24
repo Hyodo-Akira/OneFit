@@ -37,4 +37,13 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function logout(Request $request)
+{
+    Auth::logout(); // ログアウト処理
+    $request->session()->invalidate(); // セッションを無効に
+    $request->session()->regenerateToken(); // CSRFトークンを再生成
+
+    return redirect('/login')->with('success', 'ログアウトしました');
+}
 }

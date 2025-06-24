@@ -39,3 +39,17 @@ Route::get('users/{id}/edit',[UserController::class,'edit'])->name('users.edit')
 Route::put('/users/{id}',[UserController::class,'update'])->name('users.update');
 //データを削除するときに使うルート（どのユーザーのデータを削除するか）、UserControllerのdestroyクラスを使う→users.destroyで使える
 Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
+
+//パスワード再設定用処理まとめ
+Route::prefix('reset')->group(function(){
+    //パスワード再設定用のメール送信フォーム
+    Route::get('/','UserController@requestResetPasswordMail')->name('reset.form');
+    //メール送信処理
+    Route::post('/send','UserController@sendResetPasswordMail')->name('reset.send');
+    // メール送信完了
+    Route::get('/send/complete', 'UserController@sendCompleteResetPasswordMail')->name('reset.send.complete');
+    // パスワード再設定
+    Route::get('/password/edit', 'UserController@resetPassword')->name('reset.password.edit');
+    // パスワード更新
+    Route::post('/password/update', 'UserController@updatePassword')->name('reset.password.update');
+});
