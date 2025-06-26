@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 //userモデル（DBとつながっている登録編集などの仲介役）を使用
 use App\Models\User;
-
+use App\Models\PasswordReset;
+use App\Repositories\Eloquents\UserRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Http\Requests\ResetInputMailRequest;
 use App\Mail\ResetPasswordMail;
@@ -60,25 +61,25 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    // パスワード再設定用のメール送信フォーム
+    // パスワード再設定用のメール送信フォーム表示する関数
     public function requestResetPasswordMail()
     {
         return view('auth.reset_input_mail');
     }
-    //  メール送信 
+
+    // メール送信関数　フォームから送られてきたメールアドレスを受け取って処理する関数
     public function sendResetPasswordMail(ResetInputMailRequest $request)
     {
+        //この処理が失敗した場合はcatchに進む
         try {
-            // ユーザー情報取得
-            $user = $this->userRepository->findFromMail($request->mail);
-            $userToken = $this->userRepository->updateOrCreateUser($user->id);
+            // ユーザー情報取得 userRepositoryで定義したfindFromMailを使ってemailでユーザーを探す
+            $user = $this->userRepository->findFromMail($request->email);
+            //パスワード再設定用のトークン（鍵）を作る
+            $passwordReset = $this->userRepository->updateOrCreateUser($user->id);
 
             // メール送信
-            Log::info(__METHOD__ . '...ID:' . $user->id . 'のユーザーにパスワード再設定用メールを送信します。');
-            Mail::send(new ResetPasswordMail($user, $userToken));
-            Log::info(__METHOD__ . '...ID:' . $user->id . 'のユーザーにパスワード再設定用メールを送信しました。');
+            Mail::send(new ResetPasswordMail($user, $passwordReset));
         } catch(Exception $e) {
-            Log::error(__METHOD__ . '...ユーザーへのパスワード再設定用メール送信に失敗しました。 request_email = ' . $request->mail . ' error_message = ' . $e);
             return redirect()->route('reset.form')
                 ->with('flash_message', '処理に失敗しました。時間をおいて再度お試しください。');
         }
@@ -95,7 +96,7 @@ class UserController extends Controller
             return redirect()->route('reset.form')
                 ->with('flash_message', '不正なリクエストです。');
         }
-        return view('users.reset_input_mail_complete');
+        return view('users.reset_input_email_complete');
     }
     // パスワード再設定
     public function resetPassword(Request $request)
@@ -111,11 +112,12 @@ class UserController extends Controller
             // ユーザー情報取得
             $userToken = $this->userRepository->getUserTokenFromUser($resetToken);
         } catch (Exception $e) {
-            Log::error(__METHOD__ . ' UserTokenの取得に失敗しました。 error_message = ' . $e);
+            Log::error(__METHOD__ . ' PasswordResetの取得に失敗しました。 error_message = ' . $e);
             return redirect()->route('reset.form')
                 ->with('flash_message', __('パスワード再設定メールに添付されたURLから遷移してください。'));
         }
-        return view('users.reset_input_password',compact('userToken','userMail'));
+        $userMail = $passwordReset->email ?? '';
+        return view('users.reset_input_password',compact('passwordReset','userMail'));
     }
     // パスワード更新
     public function updatePassword(ResetPasswordRequest $request)
@@ -124,9 +126,9 @@ class UserController extends Controller
             // ユーザー情報取得
             $userToken = $this->userRepository->getUserTokenFromUser($request->reset_token);
             // パスワード暗号化
-            $password = encrypt($request->password);
-            $this->userRepository->updateUserPassword($password, $userToken->id);
-            Log::info(__METHOD__ . '...ID:' . $userToken->user_id . 'のユーザーのパスワードを更新しました。');
+            $password = Hash::make($request->password);
+            $this->userRepository->updateUserPassword($password, $passwordReset->id);
+            Log::info(__METHOD__ . '...ID:' . $psswordReset->user_id . 'のユーザーのパスワードを更新しました。');
         } catch (Exception $e) {
             Log::error(__METHOD__ . '...ユーザーのパスワードの更新に失敗しました。...error_message = ' . $e);
             return redirect()->route('reset.form')

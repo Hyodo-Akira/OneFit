@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\User;
+use App\Models\PasswordReset;
 
 interface UserRepositoryInterface
 {
@@ -12,22 +13,25 @@ interface UserRepositoryInterface
      * @param string $mail
      * @return User
      */
+    //メールアドレスからユーザー情報を取得する関数
     public function findFromMail(string $mail): User;
 
     /**
      * パスワードリセット用トークンを発行
      *
      * @param int $userId
-     * @return User
+     * @return PasswordReset
      */
-    public function updateOrCreateUser(int $userId): User;
+    //ユーザーIDから、パスワードリセット用トークンを発行（または更新）する関数
+    public function updateOrCreateUser(int $userId): PasswordReset;
 
     /**
      * トークンからユーザー情報を取得
      * @param string $token
-     * @return User
+     * @return PasswordReset
      */
-    public function getUserTokenFromUser(string $token): User;
+    //リセットトークンから該当ユーザーのトークン情報を取得する関数
+    public function getUserTokenFromUser(string $token): PasswordReset;
 
     /**
      * パスワード更新
@@ -36,5 +40,6 @@ interface UserRepositoryInterface
      * @param int $id
      * @return void
      */
+    //リセットトークンから該当ユーザーのトークン情報を取得する
     public function updateUserPassword(string $password, int $id): void;
 }

@@ -16,9 +16,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/home', function () {
+    return view('home');
+})->name('home');
 
 //registerにアクセスしたらAuthControllerにあるshowRegisterForm関数を使う→このルートをregisterで使える
 Route::get('/register',[AuthController::class,'showRegisterForm'])->name('register');
@@ -43,13 +43,13 @@ Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.dest
 //パスワード再設定用処理まとめ
 Route::prefix('reset')->group(function(){
     //パスワード再設定用のメール送信フォーム
-    Route::get('/','UserController@requestResetPasswordMail')->name('reset.form');
+    Route::get('/',[UserController::class,'requestResetPasswordMail'])->name('reset.form');
     //メール送信処理
-    Route::post('/send','UserController@sendResetPasswordMail')->name('reset.send');
+    Route::post('/send',[UserController::class,'sendResetPasswordMail'])->name('reset.send');
     // メール送信完了
-    Route::get('/send/complete', 'UserController@sendCompleteResetPasswordMail')->name('reset.send.complete');
+    Route::get('/send/complete',[UserController::class,'sendCompleteResetPasswordMail'])->name('reset.send.complete');
     // パスワード再設定
-    Route::get('/password/edit', 'UserController@resetPassword')->name('reset.password.edit');
+    Route::get('/password/edit',[UserController::class,'resetPassword'])->name('reset.password.edit');
     // パスワード更新
-    Route::post('/password/update', 'UserController@updatePassword')->name('reset.password.update');
+    Route::post('/password/update',[UserController::class,'updatePassword'])->name('reset.password.update');
 });

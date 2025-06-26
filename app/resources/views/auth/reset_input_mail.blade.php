@@ -8,8 +8,8 @@
         @csrf
         <div>
             <label>メールアドレス</label>
-            <input type="text" name="mail" value="{{ old('mail') }}">
-            <span>{{ $errors->first('mail') }}</span>
+            <input type="email" name="email" value="{{ old('email') }}">
+            <span>{{ $errors->first('email') }}</span>
         </div>
         <div>
             <a href="{{ route('login') }}">戻る</a>
