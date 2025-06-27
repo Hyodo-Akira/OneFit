@@ -22,8 +22,8 @@ interface UserRepositoryInterface
      * @param int $userId
      * @return PasswordReset
      */
-    //ユーザーIDから、パスワードリセット用トークンを発行（または更新）する関数
-    public function updateOrCreateUser(int $userId): PasswordReset;
+    //PasswordResetテーブルのemailから、パスワードリセット用トークンを発行（または更新）する関数
+    public function updateOrCreateUser(string $email): PasswordReset;
 
     /**
      * トークンからユーザー情報を取得

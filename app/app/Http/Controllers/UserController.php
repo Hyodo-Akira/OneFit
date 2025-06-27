@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Exception;
 use App\Http\Requests\ResetPasswordRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -75,8 +76,7 @@ class UserController extends Controller
             // ユーザー情報取得 userRepositoryで定義したfindFromMailを使ってemailでユーザーを探す
             $user = $this->userRepository->findFromMail($request->email);
             //パスワード再設定用のトークン（鍵）を作る
-            $passwordReset = $this->userRepository->updateOrCreateUser($user->id);
-
+            $passwordReset = $this->userRepository->updateOrCreateUser($user->email);
             // メール送信
             Mail::send(new ResetPasswordMail($user, $passwordReset));
         } catch(Exception $e) {
@@ -96,7 +96,7 @@ class UserController extends Controller
             return redirect()->route('reset.form')
                 ->with('flash_message', '不正なリクエストです。');
         }
-        return view('users.reset_input_email_complete');
+        return view('auth.reset_input_mail_complete');
     }
     // パスワード再設定
     public function resetPassword(Request $request)
@@ -110,31 +110,31 @@ class UserController extends Controller
 
         try {
             // ユーザー情報取得
-            $userToken = $this->userRepository->getUserTokenFromUser($resetToken);
+            $passwordReset = $this->userRepository->getUserTokenFromUser($resetToken);
         } catch (Exception $e) {
-            Log::error(__METHOD__ . ' PasswordResetの取得に失敗しました。 error_message = ' . $e);
             return redirect()->route('reset.form')
                 ->with('flash_message', __('パスワード再設定メールに添付されたURLから遷移してください。'));
         }
         $userMail = $passwordReset->email ?? '';
-        return view('users.reset_input_password',compact('passwordReset','userMail'));
+        return view('auth.reset_input_password',compact('passwordReset','userMail'));
     }
     // パスワード更新
     public function updatePassword(ResetPasswordRequest $request)
     {
         try {
             // ユーザー情報取得
-            $userToken = $this->userRepository->getUserTokenFromUser($request->reset_token);
+            $passwordReset = $this->userRepository->getUserTokenFromUser($request->reset_token);
             // パスワード暗号化
             $password = Hash::make($request->password);
-            $this->userRepository->updateUserPassword($password, $passwordReset->id);
-            Log::info(__METHOD__ . '...ID:' . $psswordReset->user_id . 'のユーザーのパスワードを更新しました。');
+            // email からユーザーを取得
+            $user = $this->userRepository->findFromMail($passwordReset->email);
+            //パスワードを更新
+            $this->userRepository->updateUserPassword($password, $user->id);
         } catch (Exception $e) {
-            Log::error(__METHOD__ . '...ユーザーのパスワードの更新に失敗しました。...error_message = ' . $e);
             return redirect()->route('reset.form')
                 ->with('flash_message', __('処理に失敗しました。時間をおいて再度お試しください。'));
         }
 
-        return view('users.reset_input_password_complete');
+        return view('auth.reset_input_password_complete');
     }
 }

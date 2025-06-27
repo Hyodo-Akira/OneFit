@@ -7,6 +7,7 @@ use App\Models\PasswordReset;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 //UserRepositoryInterfaceの実装
 class UserRepository implements UserRepositoryInterface
@@ -32,23 +33,18 @@ class UserRepository implements UserRepositoryInterface
         return $this->user->where('email', $mail)->firstOrFail();
     }
 
-    //UserTokenでパスワードリセット用トークンを発行
-    public function updateOrCreateUser(int $userId): PasswordReset
+    //PasswordResetでパスワードリセット用トークンを発行
+    public function updateOrCreateUser(string $email): PasswordReset
     {
-        //
-        $user = $this->user->findOrFail($userId);
-        // $userIdをハッシュ化(暗号化)
-        $token = hash('sha256', uniqid());
-        //UserTokenモデルに保存・更新
-        return $this->passwordReset->updateOrCreate(
-            ['email' => $user->email],
+        $this->passwordReset->updateOrCreate(
+            ['email' => $email],
             [
-                'token' => $token,
+                'token' => hash('sha256',Str::random(60)),
                 'created_at' => Carbon::now(),
             ]
         );
 
-        return $this->passwordReset->where('email',$user->email)->first();
+        return $this->passwordReset->where('email',$email)->firstOrFail();
     }
 
     // トークンからユーザー情報を取得

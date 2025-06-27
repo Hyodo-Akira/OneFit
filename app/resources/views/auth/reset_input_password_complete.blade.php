@@ -1,4 +1,4 @@
-@extends('layouts.layput')
+@extends('layouts.layout')
 @section('content')
 <main>
     <h2>パスワード変更完了</h2>
