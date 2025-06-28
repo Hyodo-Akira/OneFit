@@ -26,5 +26,5 @@
         <button type="submit">ログイン</button>
     </form>
     <a href="{{ route('reset.form') }}">パスワードをお忘れの方</a>
-    <a href="{{ route('register') }}">新規会員登録</a>
+    <a href="{{ route('signup') }}">新規会員登録</a>
 @endsection

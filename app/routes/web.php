@@ -20,10 +20,14 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-//registerにアクセスしたらAuthControllerにあるshowRegisterForm関数を使う→このルートをregisterで使える
-Route::get('/register',[AuthController::class,'showRegisterForm'])->name('register');
-//登録ボタンを押したとき（POSTはデータを送るときにつかう）registerという関数を使う
-Route::post('/register',[AuthController::class,'register']);
+//signupにアクセスしたらAuthControllerにあるshowSignupForm関数を使う→このルートをsignupで使える　※新規登録ページ表示用
+Route::get('/signup',[AuthController::class,'showSignupForm'])->name('signup');
+//signupのconfirmにアクセスしたらAuthControllerにあるconfirmSignup関数を使う→これをsignup.confirmで使える　※確認画面への送信
+Route::Post('/signup/confirm',[Authcontroller::class,'confirmSignup'])->name('signup.confirm');
+//登録内容を登録ページに残しておく関数（修正ボタン）
+Route::get('/signup/edit', [AuthController::class, 'showSignupForm'])->name('signup.edit');
+//signupのcompleteにアクセスしたらAuthControllerにあるcompleteSignup関数を使う→これをsignup.completeで使える　※登録処理
+Route::post('/signup/complete',[AuthController::class,'completeSignup'])->name('signup.complete');
 
 //loginにアクセスしたらAuthControllerにあるshowLoginForm関数を使う→このルートをloginで使える
 Route::get('/login',[AuthController::class,'showLoginForm'])->name('login');

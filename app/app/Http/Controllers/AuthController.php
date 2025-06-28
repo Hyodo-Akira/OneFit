@@ -45,13 +45,14 @@ class AuthController extends Controller
     }
 
     //新規登録画面を表示する関数
-    public function showRegisterForm()
+    public function showSignupForm(Request $request)
     {
-        return view('auth.register'); //register.blade.phpを表示
+        $input = $request->session()->get('signup_input', []);
+        return view('auth.signup', compact('input')); //signup.blade.phpを表示
     }
 
     //新規登録処理を行う関数
-    public function register(Request $request)
+    public function confirmSignup(Request $request)
     {
         //入力内容のバリデーションチェック
         $request->validate([
@@ -59,6 +60,16 @@ class AuthController extends Controller
             'email' => 'required|email|max:30', //必須、正しいメール方式
             'password' => 'required|min:6' //必須、6文字以上（安全のため）
         ]);
+
+        // 入力内容をセッションに保存
+        $request->session()->put('signup_input', $request->only(['name', 'email', 'password', 'password_confirmation']));
+
+        $input = $request->all();
+        return view('auth.signup_confirm',compact('input'));
+    }
+
+    public function completeSignup(Request $request)
+    {
         //Userモデルを使ってあたらしいデータを作る
         User::create([
             'name' => $request->name,
@@ -66,7 +77,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->password), //セキュリティ保護のためハッシュ化して保存
         ]);
 
-        return redirect()->route('login');
+        // セッションの削除
+        $request->session()->forget('signup_input');
+
+
+        return view('auth.signup_complete');
     }
 
     //ログアウト機能関数
