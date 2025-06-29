@@ -1,7 +1,8 @@
-@extends('layouts.layout')
+@extends('layouts.login_before')
 @section('content')
 
 <h1>新規登録内容確認</h1>
+
 
 <form method="POST" action="{{ route('signup.complete') }}">
     @csrf

@@ -14,14 +14,12 @@ class CreateFoodsTable extends Migration
     public function up()
     {
         Schema::create('foods', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->increments('id');
             $table->string('food_name',50);
             $table->float('calories');
             $table->float('protein');
             $table->float('fat');
             $table->float('carbs');
-            $table->date('date');
             $table->timestamps();
         });
     }

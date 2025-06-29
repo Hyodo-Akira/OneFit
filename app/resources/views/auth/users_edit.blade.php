@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.login_after')
 @section('content')
     <div class="card w-50 mx-auto m-5">
         <div class="card-body">

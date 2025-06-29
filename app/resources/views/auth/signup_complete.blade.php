@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.login_before')
 
 @section('content')
 <main>

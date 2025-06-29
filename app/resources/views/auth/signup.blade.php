@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>新規登録</title>
-</head>
-<body>
+@extends('layouts.login_before')
+@section('content')
+
     <h1>新規登録</h1>
 
     <!-- 登録エラーがあれば表示 -->
@@ -48,5 +44,5 @@
     </form>
 
     <p>すでにアカウントをお持ちの方は <a href="{{ route('login') }}">ログイン</a></p>
-</body>
-</html>
+
+@endsection

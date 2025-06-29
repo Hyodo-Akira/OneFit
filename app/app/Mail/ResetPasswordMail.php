@@ -45,7 +45,7 @@ class ResetPasswordMail extends Mailable
         $url = URL::temporarySignedRoute('reset.password.edit' , $now->addHours(24), $tokenParam);
 
         // HTML形式でメール作成
-        return $this->view('mails.password_reset_mail')
+        return $this->view('mails.pwd_reset_mail')
                     ->subject('パスワード再設定用URLのご案内')
                     ->from(config('mail.from.address'), config('mail.from.name'))
                     ->to($this->user->email)

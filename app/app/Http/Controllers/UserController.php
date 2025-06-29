@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    public function showMypage()
+    {
+        return view('mypage');
+    }
+
     //編集画面を表示する関数
     public function edit()
     {
@@ -41,7 +47,7 @@ class UserController extends Controller
         ]);
         
         // /homeにリダイレクト、完了メッセージ
-        return redirect('/home')->with('success','アカウント情報を変更しました');
+        return redirect('/main')->with('success','アカウント情報を変更しました');
     }
 
     //ログインしているユーザーのアカウントを削除する関数
@@ -65,7 +71,7 @@ class UserController extends Controller
     // パスワード再設定用のメール送信フォーム表示する関数
     public function requestResetPasswordMail()
     {
-        return view('auth.reset_input_mail');
+        return view('auth.pwd_reset');
     }
 
     // メール送信関数　フォームから送られてきたメールアドレスを受け取って処理する関数
@@ -116,7 +122,7 @@ class UserController extends Controller
                 ->with('flash_message', __('パスワード再設定メールに添付されたURLから遷移してください。'));
         }
         $userMail = $passwordReset->email ?? '';
-        return view('auth.reset_input_password',compact('passwordReset','userMail'));
+        return view('auth.pwd_form',compact('passwordReset','userMail'));
     }
     // パスワード更新
     public function updatePassword(ResetPasswordRequest $request)
@@ -135,6 +141,6 @@ class UserController extends Controller
                 ->with('flash_message', __('処理に失敗しました。時間をおいて再度お試しください。'));
         }
 
-        return view('auth.reset_input_password_complete');
+        return view('auth.pwd_comp');
     }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.login_before')
 @section('content')
     <h1>ログイン</h1>
 
@@ -22,9 +22,8 @@
 
         <label for="password">パスワード：</label><br>
         <input type="password" id="password" name="password" required><br><br>
-
+        <a href="{{ route('reset.form') }}">パスワードをお忘れの方</a><br><br>
         <button type="submit">ログイン</button>
     </form>
-    <a href="{{ route('reset.form') }}">パスワードをお忘れの方</a>
-    <a href="{{ route('signup') }}">新規会員登録</a>
+    <a href="{{ route('signup') }}">新規登録はこちらから</a>
 @endsection
