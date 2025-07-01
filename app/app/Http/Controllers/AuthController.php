@@ -21,6 +21,10 @@ use Carbon\Carbon;
 
 use App\FoodRecord;
 
+use App\Weight;
+
+use App\Training;
+
 
 class AuthController extends Controller
 {   
@@ -39,7 +43,7 @@ class AuthController extends Controller
         //ログインしたユーザーの情報を取得し$userに代入
         $user = Auth::user();
 
-
+        // 日付を取得する
         $today = Carbon::today();
 
         $todayrecords = FoodRecord::with('food')
@@ -64,12 +68,36 @@ class AuthController extends Controller
             $totalCarbs   += $food->carbs * $amount;
         }
 
+
+
+        $todayWeight = Weight::where('user_id',$user->id)
+            ->whereDate('date',$today)
+            ->orderBy('created_at','desc')
+            ->value('weight');
+
+
+
+        // 今日のトレーニング記録を取得（新しい順）
+        $todayTraining = Training::where('user_id', $user->id)
+            ->whereDate('date', $today)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
         return view('main', [
             'totalCalories' => round($totalCalories),
             'totalProtein' => round($totalProtein, 1),
             'totalFat' => round($totalFat, 1),
             'totalCarbs' => round($totalCarbs, 1),
             'targetCalories' => $user->target_calories ?? 2000, // 目標なければ仮で2000
+
+
+            'targetWeight' => $user->weight ?? null,
+            'todayWeight' => $todayWeight,
+
+
+            'todayTraining' => $todayTraining,
+
         ]);
     }
 

@@ -12,6 +12,10 @@ use App\Http\middleware\Authenticate;
 
 use App\Http\Controllers\MealController;
 
+use App\Http\Controllers\WeightController;
+
+use App\Http\Controllers\TrainingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +93,7 @@ Route::prefix('reset')->group(function(){
 
 
 
-// 食品選択画面を表示
+// 食事記録画面を表示
 Route::get('/meals.meal',[MealController::class,'showMealForm'])->name('meals.meal');
 // 食事記録の保存処理
 Route::post('/meals.meal',[MealController::class,'recordMeal'])->name('meals.record_meal');
@@ -100,4 +104,14 @@ Route::post('/meals.food',[MealController::class,'recordFood'])->name('meals.rec
 
 
 
+// 体重記録画面を表示
+Route::get('/weights.weight',[WeightController::class,'showWeightForm'])->name('weights.weight');
+// 体重の保存処理
+Route::post('/weight.weight',[WeightController::class,'recordWeight'])->name('weight.record');
 
+
+
+// トレーニング記録画面表示
+Route::get('/trainings.training',[TrainingController::class,'showTrainingForm'])->name('trainings.training');
+// トレーニング記録保存
+Route::post('trainings.training',[TrainingController::class,'recordTraining'])->name('training.record');

@@ -75,8 +75,7 @@
             // ユーザーが入力した「食べた量（小数）」を数字に変換している。（何も入力されていなければ、0 を使う（エラー回避のため）
             const amount = parseFloat(amountInput.value) || 0;
 
-            // selected.dataset.calories は、HTMLにある data-calories="xxx" の値を読み取る　→　それに amount を掛けて、合計カロリーを求める　→　toFixed(1)：小数点以下1桁にする（例：132.6 kcal）
-	•	値が存在しなければ --- と表示する。
+            // selected.dataset.calories は、HTMLにある data-calories="xxx" の値を読み取る　→　それに amount を掛けて、合計カロリーを求める　→　toFixed(1)：小数点以下1桁にする（例：132.6 kcal）	値が存在しなければ --- と表示する。
             const calories = selected.dataset.calories ? (selected.dataset.calories * amount * 1).toFixed(1) : '---';
             const protein  = selected.dataset.protein  ? (selected.dataset.protein  * amount * 1).toFixed(1) : '---';
             const fat      = selected.dataset.fat      ? (selected.dataset.fat      * amount * 1).toFixed(1) : '---';
