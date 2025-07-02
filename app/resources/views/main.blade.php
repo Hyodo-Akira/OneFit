@@ -58,6 +58,7 @@
             <ul>
                 @foreach ($todayTraining as $training)
                     <li>
+                        <strong>種目：{{ $training->menu }}（{{ $training->parts }}）</strong><br>
                         @for ($i = 1; $i <= 10; $i++)
                             @php
                                 $rep = $training["rep$i"];

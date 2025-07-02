@@ -9,7 +9,19 @@
     <input type="date" name="date" value="{{ date('Y-m-d') }}" required><br>
 
     <label>種目：</label>
-    <input type="text" name="menu" required><br>
+    <select name="menu" id="menu" required>
+    <option value="">選択してください</option>
+    @foreach($menus as $menu)
+        <option value="{{ $menu->name }}" {{ old('menu') == $menu->name ? 'selected' : '' }}>
+            {{ $menu->name }}
+        </option>
+    @endforeach
+    </select>
+    <!-- 横に種目追加ボタン -->
+    <a href="{{ route('trainings.trainingmenu') }}" class="btn btn-sm btn-outline-primary" style="margin-left: 10px;">
+        ＋ 種目追加
+    </a>
+    <br>
 
     <label>部位：</label>
     <input type="text" name="parts" required><br>

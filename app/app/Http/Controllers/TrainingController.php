@@ -8,11 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Training;
 
+use App\TrainingMenu;
+
 class TrainingController extends Controller
 {
     public function showTrainingForm()
     {
-        return view('trainings.training');
+        $menus = TrainingMenu::all();
+
+        return view('trainings.training',compact('menus'));
     }
 
     public function recordTraining(Request $request)
@@ -75,5 +79,23 @@ class TrainingController extends Controller
 
 
         return redirect()->route('main');
+    }
+
+    public function showTrainingMenuForm()
+    {
+        return view('trainings.trainingmenu');
+    }
+
+    public function recordTrainingMenu(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:30',
+        ]);
+
+        TrainingMenu::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('trainings.training');
     }
 }

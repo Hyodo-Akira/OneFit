@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Food;
 use App\FoodRecord;
 
+use Illuminate\Support\Facades\Http;
+
+
 class MealController extends Controller
 {
     // 食事記録画面を表示する関数

@@ -115,3 +115,9 @@ Route::post('/weight.weight',[WeightController::class,'recordWeight'])->name('we
 Route::get('/trainings.training',[TrainingController::class,'showTrainingForm'])->name('trainings.training');
 // トレーニング記録保存
 Route::post('trainings.training',[TrainingController::class,'recordTraining'])->name('training.record');
+
+
+// トレーニングメニュー追加画面表示
+Route::get('/trainings.trainingmenu',[TrainingController::class,'showTrainingMenuForm'])->name('trainings.trainingmenu');
+
+Route::post('trainings.trainingmenu',[TrainingController::class,'recordTrainingMenu'])->name('trainingmenu.record');
