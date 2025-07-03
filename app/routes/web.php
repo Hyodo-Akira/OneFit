@@ -66,6 +66,8 @@ Route::post('/login',[AuthController::class,'login']);
 //ログアウトしたいときのルート、ボタンを押したときlogout関数を使う→このルートをlogoutで使える
 Route::Post('/logout',[AuthController::class,'logout'])->name('logout');
 
+
+// マイページ表示用ルート
 Route::get('users/{id}/mypage',[UserController::class,'showMypage'])->name('mypage');
 
 //編集したいユーザーの編集ページに移動、UsersControllerのeditクラスを使う→users.editで使える
@@ -75,6 +77,11 @@ Route::put('/users/{id}',[UserController::class,'update'])->name('users.update')
 //データを削除するときに使うルート（どのユーザーのデータを削除するか）、UserControllerのdestroyクラスを使う→users.destroyで使える
 Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
 
+
+// ユーザー情報編集ページ表示（身長体重、目標など）
+Route::get('/user_edit',[UserController::class,'showUserEdit'])->name('user.edit');
+
+Route::post('/user_edit',[UserController::class,'userUpdate'])->name('user.update');
 
 
 //パスワード再設定用処理まとめ
@@ -99,8 +106,19 @@ Route::get('/meals.meal',[MealController::class,'showMealForm'])->name('meals.me
 Route::post('/meals.meal',[MealController::class,'recordMeal'])->name('meals.record_meal');
 // 食品登録ページを表示
 Route::get('/meals.food',[MealController::class,'showFoodForm'])->name('meals.food');
-
+// 食品を登録
 Route::post('/meals.food',[MealController::class,'recordFood'])->name('meals.record_food');
+
+
+
+
+// 食品検索API
+Route::post('/meals/search', [MealController::class, 'searchFood'])->name('meals.search');
+
+// 検索結果を登録
+Route::post('/meals/save-result', [MealController::class, 'saveSearchedFood'])->name('meals.food.saveResult');
+
+
 
 
 

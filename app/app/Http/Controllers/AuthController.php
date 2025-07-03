@@ -188,7 +188,7 @@ class AuthController extends Controller
         $request->session()->invalidate(); //現在のログイン情報（セッション）を無効化　※セッション＝本人証明のようなもの
         $request->session()->regenerateToken(); //次の安全なフォーム送信用トークンを作成　※トークン＝フォーム送信のときに使用する合言葉
 
-        return redirect('/login'); //ログイン画面へリダイレクト
+        return redirect()->route('login'); //ログイン画面へリダイレクト
     }
 
 }

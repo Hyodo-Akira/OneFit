@@ -19,10 +19,19 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
+    // マイページを表示する関数
     public function showMypage()
     {
-        return view('mypage');
+
+        $user = Auth::user();
+
+        return view('mypage',compact('user'));
+    }
+
+
+    public function showMypageEdit()
+    {
+        return view('');
     }
 
     //編集画面を表示する関数
@@ -46,7 +55,7 @@ class UserController extends Controller
             'email' => $request->email,
         ]);
         
-        // /homeにリダイレクト、完了メッセージ
+        // /mainにリダイレクト、完了メッセージ
         return redirect('/main')->with('success','アカウント情報を変更しました');
     }
 
@@ -59,6 +68,20 @@ class UserController extends Controller
         // /loginにリダイレクト、完了メッセージ
         return redirect('/login')->with('success','アカウントを削除しました');
     }
+
+
+    // ユーザー情報編集画面表示関数
+    public function showUserEdit()
+    {
+        return view('user_edit');
+    }
+
+    public function userUpdate()
+    {
+        
+    }
+
+
 
     private $userRepository;
     private const MAIL_SENDED_SESSION_KEY = 'user_reset_password_mail_sended_action';

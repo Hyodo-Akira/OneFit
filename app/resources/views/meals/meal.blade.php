@@ -2,6 +2,47 @@
 @section('content')
 <h1>食事記録</h1>
 
+
+
+
+<!-- APIここから -->
+<h2>食品検索</h2>
+<form action="{{ route('meals.search') }}" method="POST">
+    @csrf
+    <input type="text" name="food_name" placeholder="例：ごはん" required>
+    <button type="submit">検索</button>
+</form>
+
+@if(session('search_result'))
+    <div style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;">
+        <p>検索結果：{{ session('search_result')['food_name'] }}</p>
+        <ul>
+            <li>カロリー: {{ session('search_result')['calories'] }} kcal</li>
+            <li>たんぱく質: {{ session('search_result')['protein'] }} g</li>
+            <li>脂質: {{ session('search_result')['fat'] }} g</li>
+            <li>炭水化物: {{ session('search_result')['carbs'] }} g</li>
+        </ul>
+
+        <form action="{{ route('meals.record_food') }}" method="POST">
+            @csrf
+            <input type="hidden" name="food_name" value="{{ session('search_result')['food_name'] }}">
+            <input type="hidden" name="calories" value="{{ session('search_result')['calories'] }}">
+            <input type="hidden" name="protein" value="{{ session('search_result')['protein'] }}">
+            <input type="hidden" name="fat" value="{{ session('search_result')['fat'] }}">
+            <input type="hidden" name="carbs" value="{{ session('search_result')['carbs'] }}">
+            <button type="submit">この食品を登録する</button>
+        </form>
+    </div>
+<!-- API検索で値がなかった場合、食品追加リンクを表示 -->
+@elseif(session('error'))
+    <p style="color:red;">{{ session('error') }}</p>
+    <a href="{{ route('meals.food') }}">新しい食品を登録する</a>
+@endif
+<!-- APIここまで -->
+
+
+
+
 <!-- フォーム送信、送信先 -->
 <form method="POST" action="{{ route('meals.record_meal') }}">
     @csrf
@@ -39,13 +80,12 @@
 
 
         <div>
-            <label>食べた量 × </label>
+            <label>食べた量（100g） × </label>
             <input type="number" name="amount" value="{{ old('amount') }}" required>
         </div>
 
 
 
-        <a href="{{ route('meals.food') }}">新しい食品を登録する</a>
     </div>
 
     <div>

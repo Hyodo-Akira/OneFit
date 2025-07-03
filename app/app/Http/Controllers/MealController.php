@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use App\Food;
 use App\FoodRecord;
 
-use Illuminate\Support\Facades\Http;
+
+use GuzzleHttp\Client;
 
 
 class MealController extends Controller
@@ -73,4 +74,62 @@ class MealController extends Controller
 
         return redirect()->route('meals.meal');
     }
+
+
+
+    // API処理関数
+    public function searchFood(Request $request)
+    {
+        $request->validate([
+            'food_name' => 'required|string|max:50'
+        ]);
+
+        $searchTerm = $request->food_name;
+
+        $client = new Client();
+        $response = $client->get('https://world.openfoodfacts.org/cgi/search.pl', [
+            'query' => [
+                'search_terms' => $searchTerm,
+                'search_simple' => 1,
+                'action' => 'process',
+                'json' => 1
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(),true);
+
+        if (empty($data['products'][0]['nutriments'])) {
+            return back()->with('error', '該当する食品が見つかりませんでした。');
+        }
+
+        $product = $data['products'][0];
+        $nutrients = $product['nutriments'];
+
+        return back()->with('search_result', [
+            'food_name' => $product['product_name'] ?? $searchTerm,
+            'calories'  => $nutrients['energy-kcal_100g'] ?? 0,
+            'protein'   => $nutrients['proteins_100g'] ?? 0,
+            'fat'       => $nutrients['fat_100g'] ?? 0,
+            'carbs'     => $nutrients['carbohydrates_100g'] ?? 0,
+        ]);
+    }
+
+    public function saveSearchedFood(Request $request)
+    {
+        $request->validate([
+            'food_name' => 'required|string|max:50',
+            'calories'  => 'required|numeric',
+            'protein'   => 'required|numeric',
+            'fat'       => 'required|numeric',
+            'carbs'     => 'required|numeric',
+        ]);
+
+        Food::create($request->only(['food_name', 'calories', 'protein', 'fat', 'carbs']));
+
+        return redirect()->route('meals.meal')->with('success', '食品を登録しました！');
+    }
+
+
+
+
 }
