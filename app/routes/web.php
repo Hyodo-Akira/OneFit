@@ -68,20 +68,20 @@ Route::Post('/logout',[AuthController::class,'logout'])->name('logout');
 
 
 // マイページ表示用ルート
-Route::get('users/{id}/mypage',[UserController::class,'showMypage'])->name('mypage');
+Route::get('/mypage',[UserController::class,'showMypage'])->name('mypage');
 
 //編集したいユーザーの編集ページに移動、UsersControllerのeditクラスを使う→users.editで使える
-Route::get('users/{id}/edit',[UserController::class,'edit'])->name('users.edit');
+Route::get('users_edit',[UserController::class,'edit'])->name('users.edit');
 //データを上書きするときに使うルート（どのユーザーのデータを更新するか）、UserControllerのupdateクラスを使う→users.updateで使える
-Route::put('/users/{id}',[UserController::class,'update'])->name('users.update');
+Route::put('/users_edit',[UserController::class,'update'])->name('users.update');
 //データを削除するときに使うルート（どのユーザーのデータを削除するか）、UserControllerのdestroyクラスを使う→users.destroyで使える
-Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
+Route::delete('/users_edit',[UserController::class,'destroy'])->name('users.destroy');
 
 
 // ユーザー情報編集ページ表示（身長体重、目標など）
 Route::get('/user_edit',[UserController::class,'showUserEdit'])->name('user.edit');
-
-Route::post('/user_edit',[UserController::class,'userUpdate'])->name('user.update');
+// ユーザー情報を更新する場合
+Route::put('/user_edit',[UserController::class,'userUpdate'])->name('user.update');
 
 
 //パスワード再設定用処理まとめ

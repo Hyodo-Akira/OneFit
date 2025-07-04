@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 //userモデル（DBとつながっている登録編集などの仲介役）を使用
-use App\Models\User;
+use App\User;
 use App\Models\PasswordReset;
 use App\Repositories\Eloquents\UserRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Exception;
 use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -25,23 +26,20 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        return view('mypage',compact('user'));
+        $age = $user->birth_date ? Carbon::parse($user->birth_date)->age : null;
+
+        return view('mypage',compact('user','age'));
     }
 
 
-    public function showMypageEdit()
-    {
-        return view('');
-    }
-
-    //編集画面を表示する関数
+    // アカウント編集画面を表示する関数
     public function edit()
     {
         $user = Auth::user(); //ログインしているユーザーのidを取得→$userに代入
-        return view('auth.users_edit',['user' => $user]); //$userの情報を元にusers_editに値を代入
+        return view('auth.users_edit',compact('user')); //$userの情報を元にusers_editに値を代入
     }
 
-    //編集内容でDBを更新させる関数
+    // アカウント編集内容でDBを更新させる関数
     public function update(Request $request)
     {
         $request->validate([ //バリデーション
@@ -59,7 +57,7 @@ class UserController extends Controller
         return redirect('/main')->with('success','アカウント情報を変更しました');
     }
 
-    //ログインしているユーザーのアカウントを削除する関数
+    // ログインしているユーザーのアカウントを削除する関数
     public function destroy()
     {
         $user = Auth::user();
@@ -73,12 +71,28 @@ class UserController extends Controller
     // ユーザー情報編集画面表示関数
     public function showUserEdit()
     {
-        return view('user_edit');
+
+        $user = Auth::user();
+
+        return view('user_edit',compact('user'));
     }
 
-    public function userUpdate()
+
+    public function userUpdate(Request $request)
     {
-        
+        $request->validate([
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'birth_date' => 'nullable|date',
+            'sex' => 'nullable|string|max:10',
+            'pal' => 'nullable|string|max:10',
+            'target' => 'nullable|numeric',
+        ]);
+
+        $user = Auth::user();
+        $user->update($request->only(['height','weight','birth_date','sex','pal','target',]));
+
+        return redirect()->route('mypage');
     }
 
 

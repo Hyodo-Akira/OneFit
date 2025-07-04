@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password',100);
             $table->float('height')->nullable();
             $table->float('weight')->nullable();
-            $table->float('age')->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('sex',10)->nullable();
             $table->float('pal')->nullable();
             $table->float('target')->nullable();
