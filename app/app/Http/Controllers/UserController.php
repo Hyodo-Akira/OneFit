@@ -18,6 +18,8 @@ use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Storage;
+
 class UserController extends Controller
 {
     // マイページを表示する関数
@@ -42,15 +44,24 @@ class UserController extends Controller
     // アカウント編集内容でDBを更新させる関数
     public function update(Request $request)
     {
+        $user = Auth::user();
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('profile_images','public');
+            $user->image = $path;
+        }
+
         $request->validate([ //バリデーション
             'name' => 'required|max:20',
             'email' => 'required|email|max:30',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $user = Auth::user();
+
         $user->update([ //入力内容でアップデート
             'name' => $request->name,
             'email' => $request->email,
+            'image' => $request->image,
         ]);
         
         // /mainにリダイレクト、完了メッセージ

@@ -36,8 +36,8 @@
             </div>
 
             <!-- プロフィール画像 -->
-            <a href="{{ route('mypage', ['id' => Auth::id()]) }}">
-                <img src="{{ asset('storage/' . Auth::user()->image) }}"
+            <a href="{{ route('mypage') }}">
+                <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
                      alt="プロフィール画像"
                      style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
             </a>
